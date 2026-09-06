@@ -1,0 +1,480 @@
+﻿<!DOCTYPE html>
+<html lang="tg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fors Almaz Store</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{
+  --bg-main:#0b0b12; --bg-card:#15151f; --bg-card2:#1c1c29;
+  --text-main:#ffffff; --text-muted:#8e8e99;
+  --accent:#6c5ce7; --accent2:#5548c8; --accent-grad:linear-gradient(135deg,#7b6cf6,#5548c8);
+  --green:#2ecc71; --red:#ff5c5c; --border:rgba(255,255,255,.07);
+}
+body.light{
+  --bg-main:#f3f3f8; --bg-card:#ffffff; --bg-card2:#f0f0f7;
+  --text-main:#14141c; --text-muted:#75758a; --border:rgba(0,0,0,.08);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+body{
+  margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg-main); color:var(--text-main); padding:14px 14px 90px 14px;
+  transition:background .25s,color .25s;
+}
+.page{display:none; animation:fade .25s;}
+.page.active{display:block;}
+@keyframes fade{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+.topbar{display:flex; align-items:center; gap:12px; margin-bottom:16px;}
+.avatar{width:44px; height:44px; border-radius:50%; background:var(--accent-grad); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; flex-shrink:0;}
+.who{flex:1; min-width:0;}
+.who .name{font-weight:700; font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.who .uname{color:var(--text-muted); font-size:12px;}
+.icon-btn{
+  width:40px; height:40px; border-radius:50%; background:var(--bg-card); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+}
+.icon-btn svg{width:19px; height:19px;}
+.wallet{background:var(--accent-grad); border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 8px 24px -8px rgba(108,92,231,.55);}
+.wallet-label{font-size:11px; letter-spacing:1px; opacity:.85; font-weight:700; text-transform:uppercase;}
+.wallet-amount{font-size:34px; font-weight:800; margin:6px 0 16px 0;}
+.wallet-amount span{font-size:15px; font-weight:600; opacity:.85;}
+.wallet-btns{display:flex; gap:10px;}
+.wbtn{flex:1; background:rgba(255,255,255,.16); border:none; color:#fff; padding:11px; border-radius:13px; font-weight:700; font-size:13.5px; cursor:pointer;}
+.wbtn:active{background:rgba(255,255,255,.28);}
+.sec-head{display:flex; justify-content:space-between; align-items:center; margin:18px 0 12px;}
+.sec-head h3{font-size:16px; margin:0;}
+.badge-live{background:rgba(46,204,113,.15); color:var(--green); font-size:11px; font-weight:700; padding:4px 9px; border-radius:8px;}
+.games-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+.game-card{position:relative; border-radius:14px; overflow:hidden; aspect-ratio:1/1; cursor:pointer; border:1px solid var(--border);}
+.game-card img{width:100%; height:100%; object-fit:cover; display:block;}
+.game-card .tag{position:absolute; top:6px; right:6px; background:var(--accent); color:#fff; font-size:8px; font-weight:800; padding:2px 5px; border-radius:5px;}
+.game-card .gname{position:absolute; bottom:0; left:0; right:0; background:linear-gradient(0deg,rgba(0,0,0,.85),transparent); color:#fff; font-size:10.5px; font-weight:700; padding:14px 6px 6px; text-align:center;}
+.game-card.soon{filter:grayscale(1) brightness(.5); cursor:not-allowed;}
+.back-row{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+.back-btn{width:36px; height:36px; border-radius:50%; background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer;}
+.ff-title{display:flex; align-items:center; gap:10px; margin-bottom:16px;}
+.ff-title img{width:44px; height:44px; border-radius:11px; object-fit:cover;}
+.ff-title h2{font-size:17px; margin:0;}
+.card-box{background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:15px; margin-bottom:14px;}
+.field-label{font-size:11px; letter-spacing:.5px; color:var(--text-muted); font-weight:700; margin-bottom:8px; text-transform:uppercase;}
+.check-row{display:flex; gap:8px;}
+.check-row input{flex:1; min-width:0; background:var(--bg-main); border:1px solid var(--border); color:var(--text-main); padding:12px; border-radius:11px; font-size:15px;}
+.check-btn{background:var(--accent-grad); border:none; color:#fff; padding:0 18px; border-radius:11px; font-weight:700; cursor:pointer; font-size:13.5px; white-space:nowrap;}
+.check-btn[disabled]{opacity:.6;}
+.verify-result{display:none; margin-top:10px; align-items:center; gap:6px; font-size:13.5px; font-weight:700;}
+.verify-result.ok{color:var(--green);}
+.verify-result.err{color:var(--red);}
+.region-tabs{display:flex; gap:8px; margin-top:2px;}
+.region-tab{flex:1; text-align:center; padding:9px 4px; border-radius:10px; background:var(--bg-main); border:1px solid var(--border); font-size:12.5px; font-weight:700; color:var(--text-muted); cursor:pointer;}
+.region-tab.active{background:var(--accent-grad); color:#fff; border-color:transparent;}
+.region-tab.soon{opacity:.45; cursor:not-allowed;}
+.cat-tabs{display:flex; gap:8px; margin:16px 0 14px;}
+.cat-tab{flex:1; text-align:center; padding:10px 4px; border-radius:10px; background:var(--bg-card); border:1px solid var(--border); font-size:13px; font-weight:700; color:var(--text-muted); cursor:pointer;}
+.cat-tab.active{background:var(--accent-grad); color:#fff; border-color:transparent;}
+.pack-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
+.pack-card{background:var(--bg-card); border:1px solid var(--border); border-radius:15px; padding:12px; display:flex; align-items:center; gap:10px; cursor:pointer; position:relative; transition:transform .12s;}
+.pack-card:active{transform:scale(.97); background:var(--bg-card2);}
+.pack-card .gem{width:38px; height:38px; flex-shrink:0;}
+.pack-card .info{min-width:0;}
+.pack-card .pname{font-weight:700; font-size:13.5px; line-height:1.2;}
+.pack-card .pprice{color:var(--accent); font-weight:800; font-size:13px; margin-top:3px;}
+.pack-card.out::after{content:"Нест"; position:absolute; top:8px; right:8px; background:var(--red); color:#fff; font-size:9px; font-weight:800; padding:2px 6px; border-radius:6px;}
+.pack-card.out{opacity:.55;}
+.empty-note{grid-column:1/-1; text-align:center; color:var(--text-muted); font-size:13px; padding:20px 0;}
+.bottom-nav{position:fixed; left:14px; right:14px; bottom:14px; background:var(--bg-card); border:1px solid var(--border); border-radius:18px; display:flex; justify-content:space-around; padding:10px 0; backdrop-filter:blur(10px);}
+.nav-item{text-align:center; color:var(--text-muted); font-size:11px; font-weight:700; cursor:pointer;}
+.nav-item svg{width:20px; height:20px; display:block; margin:0 auto 3px;}
+.nav-item.active{color:var(--accent);}
+.profile-card{background:var(--bg-card); border:1px solid var(--border); border-radius:18px; padding:20px; text-align:center; margin-bottom:14px;}
+.avatar-lg{width:62px; height:62px; border-radius:50%; background:var(--accent-grad); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:24px; margin:0 auto 10px;}
+.stat-row{display:flex; gap:10px; margin-top:16px;}
+.stat-box{flex:1; background:var(--bg-main); border-radius:13px; padding:12px;}
+.stat-box .l{font-size:10px; color:var(--text-muted); font-weight:700; letter-spacing:.5px;}
+.stat-box .v{font-weight:800; font-size:17px; margin-top:3px;}
+.settings-row{display:flex; justify-content:space-between; align-items:center; background:var(--bg-card); border:1px solid var(--border); padding:15px; border-radius:14px; margin-bottom:10px; cursor:pointer;}
+.settings-row .left{display:flex; align-items:center; gap:12px; font-weight:600; font-size:14px;}
+.settings-row .ico{width:34px; height:34px; border-radius:10px; background:var(--bg-main); display:flex; align-items:center; justify-content:center;}
+.switch{position:relative; display:inline-block; width:42px; height:25px; flex-shrink:0;}
+.switch input{opacity:0; width:0; height:0;}
+.slider{position:absolute; inset:0; background:#3a3a46; border-radius:34px; transition:.3s; cursor:pointer;}
+.slider:before{content:""; position:absolute; height:19px; width:19px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.3s;}
+input:checked + .slider{background:var(--accent-grad);}
+input:checked + .slider:before{transform:translateX(17px);}
+.hist-item{display:flex; justify-content:space-between; align-items:center; background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:13px 15px; margin-bottom:9px;}
+.hist-item .t{font-weight:700; font-size:13.5px;}
+.hist-item .s{color:var(--text-muted); font-size:11.5px; margin-top:2px;}
+.hist-item .p{font-weight:800; color:var(--accent); font-size:13.5px;}
+.hist-empty{text-align:center; color:var(--text-muted); padding:40px 0; font-size:13.5px;}
+.btn-main{width:100%; background:var(--accent-grad); border:none; color:#fff; padding:13px; border-radius:13px; font-weight:700; font-size:14.5px; cursor:pointer; margin-top:6px;}
+.btn-ghost{width:100%; background:transparent; border:1px solid var(--border); color:var(--text-main); padding:13px; border-radius:13px; font-weight:700; font-size:14.5px; cursor:pointer; margin-top:8px;}
+input[type=number]{-moz-appearance:textfield;}
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+</style>
+</head>
+<body>
+<div id="page-shop" class="page active">
+  <div class="topbar">
+    <div class="avatar" id="avatar">F</div>
+    <div class="who">
+      <div class="name" id="uname">Дӯст</div>
+      <div class="uname" id="uid">@fors_almaz</div>
+    </div>
+    <div class="icon-btn" id="soundBtn" onclick="toggleSound()"></div>
+    <div class="icon-btn" id="themeBtn" onclick="toggleTheme()"></div>
+  </div>
+  <div class="wallet">
+    <div class="wallet-label">Баланс</div>
+    <div class="wallet-amount"><span id="balanceVal">0.0</span> <span>сомонӣ</span></div>
+    <div class="wallet-btns">
+      <button class="wbtn" onclick="switchPage('topup')">💳 Пур кардан</button>
+      <button class="wbtn" onclick="switchPage('history')">🧾 Таърих</button>
+    </div>
+  </div>
+  <div class="sec-head">
+    <h3>Бозиҳо</h3>
+    <div class="badge-live">● Онлайн</div>
+  </div>
+  <div class="games-grid">
+    <div class="game-card" onclick="switchPage('ff')">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Free_Fire_2017_logo.png/240px-Free_Fire_2017_logo.png" onerror="this.style.display='none'">
+      <div class="tag">GLOBAL</div>
+      <div class="gname">FREE FIRE</div>
+    </div>
+    <div class="game-card soon"><div class="gname">БА ЗУДӢ</div></div>
+    <div class="game-card soon"><div class="gname">БА ЗУДӢ</div></div>
+  </div>
+</div>
+<div id="page-ff" class="page">
+  <div class="back-row">
+    <div class="back-btn" onclick="switchPage('shop')">‹</div>
+    <div class="ff-title">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Free_Fire_2017_logo.png/240px-Free_Fire_2017_logo.png" onerror="this.style.display='none'">
+      <h2>Free Fire</h2>
+    </div>
+  </div>
+  <div class="card-box">
+    <div class="field-label">ID-и бозингар</div>
+    <div class="check-row">
+      <input type="number" id="playerId" placeholder="Масалан: 1897944254" oninput="resetVerify()">
+      <button class="check-btn" id="checkBtn" onclick="checkUID()">Санҷидан</button>
+    </div>
+    <div class="verify-result" id="verifyResult"></div>
+    <div style="margin-top:14px;">
+      <div class="field-label">Минтақа</div>
+      <div class="region-tabs">
+        <div class="region-tab active" data-region="cis" onclick="switchRegion('cis')">СНГ</div>
+        <div class="region-tab soon">Indonesia</div>
+        <div class="region-tab soon">Brazil</div>
+      </div>
+    </div>
+  </div>
+  <div class="cat-tabs">
+    <div class="cat-tab active" data-cat="diamonds" onclick="switchCategory('diamonds')">💎 Алмазы</div>
+    <div class="cat-tab" data-cat="pass" onclick="switchCategory('pass')">🎫 Пропуск</div>
+  </div>
+  <div class="pack-grid" id="packGrid"></div>
+</div>
+<div id="page-topup" class="page">
+  <div class="back-row">
+    <div class="back-btn" onclick="switchPage('profile')">‹</div>
+    <h2 style="font-size:17px; margin:0;">Пур кардани баланс</h2>
+  </div>
+  <div class="card-box">
+    <div class="field-label">Маблағ (сомонӣ)</div>
+    <input type="number" id="topupAmount" placeholder="Масалан: 20" style="width:100%; background:var(--bg-main); border:1px solid var(--border); color:var(--text-main); padding:12px; border-radius:11px; font-size:15px;">
+    <p style="font-size:12.5px; color:var(--text-muted); margin-top:10px; line-height:1.5;">Пас аз пахши тугма боти мо рақами кортро мефиристад. Пул гузаронед ва скриншоти чекро ба чат равон кунед — админ дар зарфи чанд дақиқа тасдиқ мекунад.</p>
+    <button class="btn-main" onclick="requestTopUp()">Идома додан ➔</button>
+  </div>
+</div>
+<div id="page-history" class="page">
+  <div class="back-row">
+    <div class="back-btn" onclick="switchPage('shop')">‹</div>
+    <h2 style="font-size:17px; margin:0;">Таърихи харидҳо</h2>
+  </div>
+  <div id="historyList"></div>
+</div>
+<div id="page-profile" class="page">
+  <div class="profile-card">
+    <div class="avatar-lg" id="avatarLg">F</div>
+    <h2 id="pname" style="margin:0; font-size:19px;">Дӯст</h2>
+    <div style="color:var(--text-muted); font-size:12px; margin-top:4px;" id="pid">ID: ---</div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="l">БАЛАНС</div><div class="v" id="statBalance">0.0</div></div>
+      <div class="stat-box"><div class="l">ҶАМЪИ ХАРОҶОТ</div><div class="v" id="statSpent">0.0</div></div>
+    </div>
+    <button class="btn-main" onclick="switchPage('topup')">Пур кардани баланс</button>
+  </div>
+  <div class="settings-row">
+    <div class="left"><div class="ico">🌙</div> Реҷаи шабона</div>
+    <label class="switch"><input type="checkbox" id="themeToggle" onchange="toggleTheme(true)"><span class="slider"></span></label>
+  </div>
+  <div class="settings-row">
+    <div class="left"><div class="ico">🔊</div> Садо (эффектҳо)</div>
+    <label class="switch"><input type="checkbox" id="soundToggle" onchange="toggleSound(true)"><span class="slider"></span></label>
+  </div>
+  <div class="settings-row" onclick="openSupport()">
+    <div class="left"><div class="ico">🎧</div> Дастгирӣ</div>
+    <div style="color:var(--text-muted);">›</div>
+  </div>
+  <div class="settings-row" onclick="shareBot()">
+    <div class="left"><div class="ico">👥</div> Даъват кардани дӯстон</div>
+    <div style="color:var(--text-muted);">›</div>
+  </div>
+</div>
+<nav class="bottom-nav">
+  <div class="nav-item active" id="nav-shop" onclick="switchPage('shop')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    Мағоза
+  </div>
+  <div class="nav-item" id="nav-history" onclick="switchPage('history')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Таърих
+  </div>
+  <div class="nav-item" id="nav-profile" onclick="switchPage('profile')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+    Профил
+  </div>
+</nav>
+<script>
+const PACKAGES = [
+  {id:"ff_5",   name:"5 Diamonds",   price:1.0,  cat:"diamonds", tier:1},
+  {id:"ff_12",  name:"12 Diamonds",  price:2.0,  cat:"diamonds", tier:1},
+  {id:"ff_10",  name:"10 Diamonds",  price:2.0,  cat:"diamonds", tier:1},
+  {id:"ff_20",  name:"20 Diamonds",  price:3.0,  cat:"diamonds", tier:1},
+  {id:"ff_25",  name:"25 Diamonds",  price:3.5,  cat:"diamonds", tier:2},
+  {id:"ff_30",  name:"30 Diamonds",  price:4.0,  cat:"diamonds", tier:2},
+  {id:"ff_50",  name:"50 Diamonds",  price:6.0,  cat:"diamonds", tier:2},
+  {id:"ff_100", name:"100 Diamonds", price:11.0, cat:"diamonds", tier:3},
+  {id:"ff_110", name:"110 Diamonds", price:12.0, cat:"diamonds", tier:3},
+  {id:"ff_240", name:"240 Diamonds", price:24.0, cat:"diamonds", tier:3},
+  {id:"ff_530", name:"530 Diamonds", price:48.0, cat:"diamonds", tier:3},
+  {id:"ff_weekly",     name:"Ҳафтаинаи Lite", price:5.0,  cat:"pass", tier:2},
+  {id:"ff_weekly_pro", name:"Ҳафтаинаи Pro",  price:16.0, cat:"pass", tier:3},
+  {id:"ff_monthly",    name:"Моҳонаи Pass",   price:70.0, cat:"pass", tier:3},
+];
+const FF_CHECK_API_BASE = "https://free-ff-api-src-5plp.onrender.com/api/v1/account";
+const FF_CHECK_COOLDOWN_MS = 4000;
+const FF_CHECK_CACHE_MS = 5 * 60 * 1000;
+let lastCheckAt = 0;
+let currentRegion = "CIS";
+const tg = window.Telegram.WebApp;
+tg.ready(); tg.expand();
+if (tg.setHeaderColor) { try{ tg.setHeaderColor('#0b0b12'); }catch(e){} }
+let verifiedName = null;
+if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+  const u = tg.initDataUnsafe.user;
+  const full = u.first_name + (u.last_name ? " " + u.last_name : "");
+  document.getElementById('uname').innerText = full;
+  document.getElementById('pname').innerText = full;
+  document.getElementById('uid').innerText = u.username ? "@"+u.username : "ID: "+u.id;
+  document.getElementById('pid').innerText = "ID: " + u.id;
+  const letter = full.charAt(0).toUpperCase();
+  document.getElementById('avatar').innerText = letter;
+  document.getElementById('avatarLg').innerText = letter;
+}
+function refreshBalanceUI(){
+  const bal = parseFloat(localStorage.getItem('almaz_balance') || '0');
+  document.getElementById('balanceVal').innerText = bal.toFixed(1);
+  document.getElementById('statBalance').innerText = bal.toFixed(1);
+  const spent = parseFloat(localStorage.getItem('almaz_spent') || '0');
+  document.getElementById('statSpent').innerText = spent.toFixed(1);
+}
+refreshBalanceUI();
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  const nav = document.getElementById('nav-'+p);
+  if(nav) nav.classList.add('active');
+  if(p==='history') renderHistory();
+  playClick();
+}
+function applyTheme(light){
+  document.body.classList.toggle('light', light);
+  document.getElementById('themeToggle').checked = !light;
+  renderThemeIcon(light);
+}
+function renderThemeIcon(light){
+  document.getElementById('themeBtn').innerHTML = light
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>';
+}
+function toggleTheme(fromSwitch){
+  const light = fromSwitch ? !document.getElementById('themeToggle').checked : !document.body.classList.contains('light');
+  localStorage.setItem('almaz_light', light ? '1':'0');
+  applyTheme(light);
+  playClick();
+}
+applyTheme(localStorage.getItem('almaz_light')==='1');
+let soundOn = localStorage.getItem('almaz_sound') !== '0';
+function renderSoundIcon(){
+  document.getElementById('soundBtn').innerHTML = soundOn
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 8a5 5 0 010 8"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 8l5 8M22 8l-5 8"/></svg>';
+  document.getElementById('soundToggle').checked = soundOn;
+}
+function toggleSound(fromSwitch){
+  soundOn = fromSwitch ? document.getElementById('soundToggle').checked : !soundOn;
+  localStorage.setItem('almaz_sound', soundOn ? '1':'0');
+  renderSoundIcon();
+  if(soundOn) playClick();
+}
+renderSoundIcon();
+let audioCtx;
+function playTone(freq, dur){
+  if(!soundOn) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+    o.type='sine'; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime+dur);
+  }catch(e){}
+}
+function playClick(){ if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light'); playTone(600,.06); }
+function playSuccess(){ if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success'); playTone(880,.09); setTimeout(()=>playTone(1180,.12),90); }
+function playError(){ if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error'); playTone(220,.18); }
+let currentCategory = 'diamonds';
+const REGION_CODES = { cis:"CIS", id:"ID", br:"BR" };
+function switchRegion(r){
+  document.querySelectorAll('.region-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector(`.region-tab[data-region="${r}"]`).classList.add('active');
+  currentRegion = REGION_CODES[r] || "CIS";
+  resetVerify();
+  playClick();
+}
+function switchCategory(cat){
+  currentCategory = cat;
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector(`.cat-tab[data-cat="${cat}"]`).classList.add('active');
+  renderPacks();
+  playClick();
+}
+function gemSVG(tier){
+  const colors = { 1:['#79e0ff','#2f8fd6'], 2:['#a78bff','#6c4fe0'], 3:['#ffd36c','#e0973f'] };
+  const c1 = colors[tier] ? colors[tier][0] : colors[1][0];
+  const c2 = colors[tier] ? colors[tier][1] : colors[1][1];
+  const gid = 'g'+tier+Math.floor(Math.random()*99999);
+  return '<svg class="gem" viewBox="0 0 48 48"><defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="'+c1+'"/><stop offset="100%" stop-color="'+c2+'"/></linearGradient></defs><polygon points="24,4 40,17 33,44 15,44 8,17" fill="url(#'+gid+')" stroke="rgba(255,255,255,.5)" stroke-width="1"/><polygon points="24,4 40,17 24,20 8,17" fill="#fff" opacity=".28"/><polygon points="24,20 40,17 33,44 24,20" fill="#000" opacity=".12"/></svg>';
+}
+function renderPacks(){
+  const grid = document.getElementById('packGrid');
+  const items = PACKAGES.filter(p=>p.cat===currentCategory);
+  if(items.length===0){ grid.innerHTML = '<div class="empty-note">Дар ин бахш ҳоло маҳсулот нест</div>'; return; }
+  grid.innerHTML = items.map(function(p){ return '<div class="pack-card" onclick="buyItem(\''+p.id+'\')">' + gemSVG(p.tier) + '<div class="info"><div class="pname">'+p.name+'</div><div class="pprice">'+p.price.toFixed(1)+' сомонӣ</div></div></div>'; }).join('');
+}
+renderPacks();
+function resetVerify(){
+  verifiedName = null;
+  document.getElementById('verifyResult').style.display='none';
+}
+function ffCacheGet(key){
+  try{
+    const raw = sessionStorage.getItem('ffcheck_'+key);
+    if(!raw) return null;
+    const obj = JSON.parse(raw);
+    if(Date.now() - obj.ts > FF_CHECK_CACHE_MS) return null;
+    return obj;
+  }catch(e){ return null; }
+}
+function ffCacheSet(key, nickname, level){
+  try{ sessionStorage.setItem('ffcheck_'+key, JSON.stringify({nickname:nickname, level:level, ts: Date.now()})); }catch(e){}
+}
+async function checkUID(){
+  const uid = document.getElementById('playerId').value.trim();
+  const box = document.getElementById('verifyResult');
+  const btn = document.getElementById('checkBtn');
+  if(!uid || !/^\d{6,12}$/.test(uid)){
+    box.className='verify-result err'; box.style.display='flex';
+    box.innerText='⚠️ ID-и дурустро ворид кунед (танҳо рақамҳо)';
+    playError(); return;
+  }
+  const now = Date.now();
+  const wait = FF_CHECK_COOLDOWN_MS - (now - lastCheckAt);
+  if(wait > 0){
+    box.className='verify-result err'; box.style.display='flex';
+    box.innerText = '⏳ Лутфан ' + Math.ceil(wait/1000) + ' сония сабр кунед';
+    return;
+  }
+  const cacheKey = currentRegion + ':' + uid;
+  const cached = ffCacheGet(cacheKey);
+  if(cached){
+    verifiedName = cached.nickname;
+    box.className='verify-result ok'; box.style.display='flex';
+    box.innerText = '✅ ' + cached.nickname + ' (Level ' + cached.level + ')';
+    return;
+  }
+  lastCheckAt = now;
+  btn.disabled = true; btn.innerText = '...';
+  box.className='verify-result'; box.style.display='flex'; box.style.color='var(--text-muted)';
+  box.innerText = 'Санҷиш...';
+  try{
+    const url = FF_CHECK_API_BASE + '?region=' + currentRegion + '&uid=' + encodeURIComponent(uid);
+    const res = await fetch(url);
+    const data = await res.json();
+    btn.disabled = false; btn.innerText = 'Санҷидан';
+    const nickname = data && data.basicInfo && data.basicInfo.nickname;
+    if(nickname){
+      const level = data.basicInfo.level || '?';
+      verifiedName = nickname;
+      ffCacheSet(cacheKey, nickname, level);
+      box.className='verify-result ok'; box.innerText = '✅ ' + nickname + ' (Level ' + level + ')';
+      playSuccess();
+    } else {
+      verifiedName = null;
+      box.className='verify-result err';
+      box.innerText = (data && data.message) ? '❌ ' + data.message : '❌ ID ёфт нашуд, дубора санҷед';
+      playError();
+    }
+  }catch(e){
+    btn.disabled = false; btn.innerText = 'Санҷидан';
+    verifiedName = null;
+    box.className='verify-result err';
+    box.innerText = '❌ Хидмат ҷавоб намедиҳад, баъд аз чанд сония кӯшиш кунед';
+    playError();
+  }
+}
+function buyItem(packageId){
+  const uid = document.getElementById('playerId').value.trim();
+  if(!uid){ switchPage('ff'); playError(); alert('Аввал ID-и бозингарро нависед ва тугмаи "Санҷидан"-ро пахш кунед!'); return; }
+  if(!verifiedName){ playError(); alert('Аввал ID-ро санҷед (тугмаи "Санҷидан"), то номи бозингар тасдиқ шавад!'); return; }
+  const pkg = PACKAGES.find(function(p){ return p.id===packageId; });
+  if(!pkg) return;
+  const bal = parseFloat(localStorage.getItem('almaz_balance') || '0');
+  if(bal < pkg.price){
+    playError();
+    if(confirm('Баланси шумо кофӣ нест (' + bal.toFixed(1) + ' сомонӣ). Балансро пур кунед?')) switchPage('topup');
+    return;
+  }
+  if(!confirm('Тасдиқ кунед:\n' + pkg.name + ' — ' + pkg.price.toFixed(1) + ' сомонӣ\nFree Fire ID: ' + uid)) return;
+  const data = { type:'order', package_id: pkg.id, package_name: pkg.name, price: pkg.price, uid: uid, ff_name: verifiedName || '' };
+  const newBal = bal - pkg.price;
+  localStorage.setItem('almaz_balance', newBal.toFixed(2));
+  const spent = parseFloat(localStorage.getItem('almaz_spent') || '0') + pkg.price;
+  localStorage.setItem('almaz_spent', spent.toFixed(2));
+  let history = JSON.parse(localStorage.getItem('almaz_history') || '[]');
+  history.unshift({ title: pkg.name, price: pkg.price.toFixed(1)+' сомонӣ', uid: uid, date: new Date().toLocaleString('ru-RU') });
+  localStorage.setItem('almaz_history', JSON.stringify(history));
+  refreshBalanceUI();
+  playSuccess();
+  tg.sendData(JSON.stringify(data));
+}
+function requestTopUp(){
+  const amount = document.getElementById('topupAmount').value;
+  if(!amount || parseFloat(amount) <= 0){ playError(); alert('Маблағро дуруст ворид кунед!'); return; }
+  tg.sendData(JSON.stringify({ type:'topup', amount: amount }));
+}
+function renderHistory(){
+  const history = JSON.parse(localStorage.getItem('almaz_history') || '[]');
+  const box = document.getElementById('historyList');
+  if(history.length===0){ box.innerHTML = '<div class="hist-empty">Таърих холӣ аст 🧾</div>'; return; }
+  box.innerHTML = history.map(function(h){ return '<div class="hist-item"><div><div class="t">'+h.title+'</div><div class="s">ID: '+h.uid+' · '+h.date+'</div></div><div class="p">'+h.price+'</div></div>'; }).join('');
+}
+function openSupport(){ tg.openTelegramLink ? tg.openTelegramLink('https://t.me/ForsAlmazSupport') : window.open('https://t.me/ForsAlmazSupport'); }
+function shareBot(){ tg.openTelegramLink ? tg.openTelegramLink('https://t.me/share/url?url=https://t.me/YourBotUsername') : null; }
+</script>
+</body>
+</html>
