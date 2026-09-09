@@ -3,6 +3,8 @@ import json
 import http.server
 import socketserver
 import threading
+from pathlib import Path
+from urllib.parse import urlsplit
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
@@ -10,11 +12,17 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 import config
 from database import init_db, add_balance, process_purchase
 
-# 1. Запуск локального веб-сервера для отдачи папки static
+# 1. Запуск локального веб-сервера для интерфейса и папки static
 PORT = 8000
+BASE_DIR = Path(__file__).resolve().parent
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory="static", **kwargs)
+        super().__init__(*args, directory=str(BASE_DIR / "static"), **kwargs)
+
+    def translate_path(self, path):
+        if urlsplit(path).path in ("/", "/index.html"):
+            return str(BASE_DIR / "index.html")
+        return super().translate_path(path)
 
 def start_server():
     with socketserver.TCPServer(("", PORT), Handler) as httpd:

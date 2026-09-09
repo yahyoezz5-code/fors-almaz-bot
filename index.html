@@ -380,8 +380,8 @@ function ffCacheGet(key){
     return obj;
   }catch(e){ return null; }
 }
-function ffCacheSet(key, nickname, level){
-  try{ sessionStorage.setItem('ffcheck_'+key, JSON.stringify({nickname:nickname, level:level, ts: Date.now()})); }catch(e){}
+function ffCacheSet(key, nickname){
+  try{ sessionStorage.setItem('ffcheck_'+key, JSON.stringify({nickname:nickname, ts: Date.now()})); }catch(e){}
 }
 async function checkUID(){
   const uid = document.getElementById('playerId').value.trim();
@@ -404,7 +404,7 @@ async function checkUID(){
   if(cached){
     verifiedName = cached.nickname;
     box.className='verify-result ok'; box.style.display='flex';
-    box.innerText = '✅ ' + cached.nickname + ' (Level ' + cached.level + ')';
+    box.innerText = '✅ ' + cached.nickname;
     return;
   }
   lastCheckAt = now;
@@ -418,10 +418,9 @@ async function checkUID(){
     btn.disabled = false; btn.innerText = 'Санҷидан';
     const nickname = data && data.basicInfo && data.basicInfo.nickname;
     if(nickname){
-      const level = data.basicInfo.level || '?';
       verifiedName = nickname;
-      ffCacheSet(cacheKey, nickname, level);
-      box.className='verify-result ok'; box.innerText = '✅ ' + nickname + ' (Level ' + level + ')';
+      ffCacheSet(cacheKey, nickname);
+      box.className='verify-result ok'; box.innerText = '✅ ' + nickname;
       playSuccess();
     } else {
       verifiedName = null;
