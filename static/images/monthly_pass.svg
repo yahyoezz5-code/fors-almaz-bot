@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <rect x="15" y="25" width="90" height="70" rx="12" fill="#b45309" stroke="#fde047" stroke-width="3"/>
+  <circle cx="35" cy="50" r="14" fill="#78350f"/>
+  <polygon points="35,40 45,48 35,62 25,48" fill="#fef08a"/>
+  <rect x="55" y="44" width="38" height="6" rx="3" fill="#fde68a"/>
+  <rect x="55" y="54" width="25" height="5" rx="2.5" fill="#fef3c7"/>
+  <rect x="25" y="74" width="70" height="12" rx="4" fill="#451a03"/>
+  <text x="60" y="83" font-family="Arial, sans-serif" font-size="7.5" font-weight="bold" fill="#fbbf24" text-anchor="middle">MONTHLY PASS</text>
+</svg>

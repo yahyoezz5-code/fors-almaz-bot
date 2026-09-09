@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <rect x="15" y="25" width="90" height="70" rx="12" fill="#6b21a8" stroke="#c084fc" stroke-width="3"/>
+  <polygon points="60,35 66,48 80,48 69,57 73,70 60,61 47,70 51,57 40,48 54,48" fill="#fbbf24"/>
+  <rect x="25" y="74" width="70" height="12" rx="4" fill="#3b0764"/>
+  <text x="60" y="83" font-family="Arial, sans-serif" font-size="7.5" font-weight="bold" fill="#e9d5ff" text-anchor="middle">LEVEL UP PASS</text>
+</svg>

@@ -1,0 +1,462 @@
+﻿<!DOCTYPE html>
+<html lang="tg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fors Almaz | HojiDonat Style</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top User Profile Bar -->
+  <div class="top-user-bar" id="top-user-header">
+    <div class="user-profile-summary">
+      <div class="avatar-ring" id="header-avatar">Y</div>
+      <div class="user-details">
+        <h3 id="header-username">yahyo</h3>
+        <p id="header-tg-tag">@yahyozodaaaa</p>
+      </div>
+    </div>
+    <div class="header-action-buttons">
+      <div class="icon-round-btn" onclick="toggleSound()">
+        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+      </div>
+      <div class="icon-round-btn" onclick="toggleTheme()">
+        <svg viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Violet Balance Card -->
+  <div class="balance-hero-card" id="balance-hero-widget">
+    <div class="balance-title-label">Баланс</div>
+    <div class="balance-amount-big" id="main-balance-text">0.0 <span>сомонӣ</span></div>
+    <div class="balance-actions-row">
+      <div class="balance-btn" onclick="openTopUpStep1()">
+        <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+        <span>Пур кардан</span>
+      </div>
+      <div class="balance-btn" onclick="openSupportLink()">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        <span>Дастгирӣ</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 1: MENU / FREE FIRE ==================== -->
+  <div id="view-menu" class="app-view active">
+    
+    <!-- Free Fire Banner -->
+    <div class="game-banner-box">
+      <div class="game-banner-icon">
+        <img src="images/ff_logo.svg" alt="FF">
+      </div>
+      <div class="game-banner-title">FREE FIRE</div>
+    </div>
+
+    <!-- ID Box -->
+    <div class="section-block">
+      <div class="block-title">ID-И БОЗИНГАР</div>
+      <div class="uid-input-wrap">
+        <input type="number" id="ff-uid-input" class="uid-field" placeholder="ID-ро ворид кунед" autocomplete="off">
+        <button class="uid-submit-btn" onclick="triggerUIDCheck()">Санҷидан</button>
+      </div>
+      <div id="ff-verified-badge" class="verified-player-row" style="display: none;">
+        <div>Бозигар: <span class="name" id="ff-player-name-text">...</span></div>
+        <span style="color: #34d399;">✓ Тасдиқ шуд</span>
+      </div>
+    </div>
+
+    <!-- Region Selection -->
+    <div class="section-block">
+      <div class="block-title" style="text-align: center; margin-bottom: 4px;">Минтақаро интихоб кунед</div>
+      <div class="block-subtitle" style="text-align: center;">Барои идома додан минтақаи ҳисоби худро муайян кунед</div>
+      <div class="regions-row">
+        <div class="region-pill" id="reg-id" onclick="selectRegion('Indonesia', this)">Indonesia</div>
+        <div class="region-pill" id="reg-br" onclick="selectRegion('Brazil', this)">Brazil</div>
+        <div class="region-pill active" id="reg-cis" onclick="selectRegion('СНГ', this)">СНГ</div>
+      </div>
+    </div>
+
+    <!-- Products Selection -->
+    <div class="block-title" style="margin: 20px 0 10px 4px;">МАҲСУЛОТРО ИНТИХОБ КУНЕД</div>
+    <div class="category-pills-row">
+      <button class="category-pill" id="tab-other" onclick="switchCategoryTab('other')">Дигар</button>
+      <button class="category-pill active" id="tab-almaz" onclick="switchCategoryTab('almaz')">Алмазы</button>
+      <button class="category-pill" id="tab-pass" onclick="switchCategoryTab('pass')">Пропуск</button>
+    </div>
+
+    <!-- Category 1: Алмазы Grid -->
+    <div class="items-grid-container" id="grid-almaz">
+      <div class="item-card-cell" onclick="startPurchaseItem('110_diamonds', '110 Diamonds', 110, 8.0, 'images/diamond_110.svg')">
+        <div class="item-card-icon"><img src="images/diamond_110.svg" alt="110"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">110 Diamonds</div>
+          <div class="item-card-price">8.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('341_diamonds', '341 Diamonds', 341, 27.0, 'images/diamond_341.svg')">
+        <div class="item-card-icon"><img src="images/diamond_341.svg" alt="341"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">341 Diamonds</div>
+          <div class="item-card-price">27.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('572_diamonds', '572 Diamonds', 572, 44.0, 'images/diamond_572.svg')">
+        <div class="item-card-icon"><img src="images/diamond_572.svg" alt="572"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">572 Diamonds</div>
+          <div class="item-card-price">44.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('1166_diamonds', '1166 Diamonds', 1166, 87.0, 'images/diamond_1160.svg')">
+        <div class="item-card-icon"><img src="images/diamond_1160.svg" alt="1166"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">1166 Diamonds</div>
+          <div class="item-card-price">87.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('2398_diamonds', '2398 Diamonds', 2398, 173.0, 'images/diamond_2390.svg')">
+        <div class="item-card-icon"><img src="images/diamond_2390.svg" alt="2398"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">2398 Diamonds</div>
+          <div class="item-card-price">173.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('6160_diamonds', '6160 Diamonds', 6160, 438.0, 'images/diamond_6160.svg')">
+        <div class="item-card-icon"><img src="images/diamond_6160.svg" alt="6160"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">6160 Diamonds</div>
+          <div class="item-card-price">438.0 сомонӣ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category 2: Дигар Grid -->
+    <div class="items-grid-container" id="grid-other" style="display: none;">
+      <div class="item-card-cell" onclick="startPurchaseItem('newbie_bundle', 'Newbie Bundle', 0, 3.0, 'images/ff_logo.svg')">
+        <div class="item-card-icon"><img src="images/ff_logo.svg" alt="FF"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">Newbie Bundle</div>
+          <div class="item-card-price">3.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('lvl_up_1', 'Повышение уровня...', 0, 4.0, 'images/diamond_single.svg')">
+        <div class="item-card-icon"><img src="images/diamond_single.svg" alt="lvl"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">Повышение уровня...</div>
+          <div class="item-card-price">4.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('weekly_lite', 'Еженедельная Lite', 0, 5.0, 'images/weekly_pass.svg')">
+        <div class="item-card-icon"><img src="images/weekly_pass.svg" alt="Lite"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">Еженедельная Lite</div>
+          <div class="item-card-price">5.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('lvl_up_2', 'Повышение уровня...', 0, 6.0, 'images/diamond_single.svg')">
+        <div class="item-card-icon"><img src="images/diamond_single.svg" alt="lvl"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">Повышение уровня...</div>
+          <div class="item-card-price">6.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('evo_7d', 'Evo Access 7d', 0, 8.0, 'images/diamond_single.svg')">
+        <div class="item-card-icon"><img src="images/diamond_single.svg" alt="Evo"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">Evo Access 7d</div>
+          <div class="item-card-price">8.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('evo_30d', 'Evo Access 30d', 0, 24.0, 'images/diamond_single.svg')">
+        <div class="item-card-icon"><img src="images/diamond_single.svg" alt="Evo"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">Evo Access 30d</div>
+          <div class="item-card-price">24.0 сомонӣ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category 3: Пропуск Grid -->
+    <div class="items-grid-container" id="grid-pass" style="display: none;">
+      <div class="item-card-cell" onclick="startPurchaseItem('weekly_pass', 'Еженедельная Подписка', 0, 16.0, 'images/weekly_pass.svg')">
+        <div class="item-card-icon"><img src="images/weekly_pass.svg" alt="Weekly"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">Еженедельная Подписка</div>
+          <div class="item-card-price">16.0 сомонӣ</div>
+        </div>
+      </div>
+      <div class="item-card-cell" onclick="startPurchaseItem('monthly_pass', 'Месячная Подписка', 0, 70.0, 'images/monthly_pass.svg')">
+        <div class="item-card-icon"><img src="images/monthly_pass.svg" alt="Monthly"></div>
+        <div class="item-card-info">
+          <div class="item-card-title">Месячная Подписка</div>
+          <div class="item-card-price">70.0 сомонӣ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Promo code row -->
+    <div class="promo-box-row">
+      <input type="text" id="promo-code-field" class="promo-input" placeholder="Рамзи промо">
+      <button class="promo-btn" onclick="applyPromoCode()">Татбиқ</button>
+    </div>
+
+  </div>
+
+  <!-- ==================== PAGE 2: ТАЪРИХ (HISTORY) ==================== -->
+  <div id="view-history" class="app-view" style="display: none;">
+    <div class="subpage-back-row">
+      <div class="subpage-title">Таърих</div>
+      <div style="margin-left: auto; cursor: pointer;" onclick="fetchUserOrdersHistory()">
+        <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:#818cf8;"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+      </div>
+    </div>
+
+    <!-- Toggle between Orders & Finance -->
+    <div class="history-toggle-row">
+      <button class="history-tab-btn active" id="btn-hist-orders" onclick="switchHistoryTab('orders')">Фармоишҳо</button>
+      <button class="history-tab-btn" id="btn-hist-finance" onclick="switchHistoryTab('finance')">Молия</button>
+    </div>
+
+    <!-- Filter chips -->
+    <div class="history-filter-chips">
+      <div class="history-chip active" onclick="filterHistory('all', this)">Ҳама</div>
+      <div class="history-chip" onclick="filterHistory('completed', this)">Иҷро шуд</div>
+      <div class="history-chip" onclick="filterHistory('pending', this)">Дар интизор</div>
+      <div class="history-chip" onclick="filterHistory('rejected', this)">Рад шуд</div>
+    </div>
+
+    <!-- History Container -->
+    <div id="history-items-container">
+      <div class="empty-state-wrap">
+        <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+        <h4>Маълумот нест</h4>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 3: ПРОФИЛ (PROFILE) ==================== -->
+  <div id="view-profile" class="app-view" style="display: none;">
+    <div class="subpage-title" style="margin-bottom: 16px;">Профил</div>
+
+    <div class="profile-large-card">
+      <div class="profile-avatar-large" id="prof-avatar-letter">Y</div>
+      <div class="profile-username-title" id="prof-username-text">yahyo</div>
+      <div class="profile-id-pill" onclick="copyMyTGID()">
+        <span id="prof-tg-id-text">ID: 8459747832</span>
+        <svg viewBox="0 0 24 24" style="width:14px; height:14px; fill:currentColor;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+      </div>
+
+      <div class="stats-dual-cards">
+        <div class="stat-cell">
+          <div class="caption">БАЛАНС</div>
+          <div class="value" id="prof-stat-balance">0.0 <span>сомонӣ</span></div>
+        </div>
+        <div class="stat-cell">
+          <div class="caption">ҶАМЪИ ХАРОҶОТ</div>
+          <div class="value" id="prof-stat-spent">0 <span>сомонӣ</span></div>
+        </div>
+      </div>
+
+      <button class="purple-solid-btn" onclick="openTopUpStep1()">
+        Пур кардани баланс
+      </button>
+    </div>
+
+    <!-- Settings list -->
+    <div class="settings-list-block">
+      <div class="settings-row-item">
+        <div class="settings-left">
+          <svg viewBox="0 0 24 24"><path d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.5-11.5A10 10 0 0 0 12.3 2z"/></svg>
+          <span>Реҷаи шабона</span>
+        </div>
+        <label class="switch-toggle">
+          <input type="checkbox" id="theme-switch" checked onchange="toggleTheme()">
+          <span class="slider-knob"></span>
+        </label>
+      </div>
+
+      <div class="settings-row-item" onclick="shareReferral()">
+        <div class="settings-left">
+          <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <span>Даъват кардани дӯстон</span>
+        </div>
+        <svg viewBox="0 0 24 24" style="width:18px; height:18px; fill:var(--text-dim);"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+      </div>
+
+      <div class="settings-row-item" onclick="openSupportLink()">
+        <div class="settings-left">
+          <svg viewBox="0 0 24 24"><path d="M12 1a9 9 0 0 0-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2a7 7 0 0 1 14 0v2h-4v8h3c1.66 0 3-1.34 3-3v-7a9 9 0 0 0-9-9z"/></svg>
+          <span>Дастгирӣ (@yahyoezz5)</span>
+        </div>
+        <svg viewBox="0 0 24 24" style="width:18px; height:18px; fill:var(--text-dim);"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== TOPUP STEP 1: CHOOSE AMOUNT ==================== -->
+  <div id="view-topup-step1" class="app-view" style="display: none;">
+    <div class="subpage-back-row">
+      <div class="circle-back-btn" onclick="navigateToView('profile')">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </div>
+      <div class="subpage-title">Пур кардани баланс</div>
+    </div>
+
+    <div class="block-title" style="margin: 20px 0 12px 4px;">1. МИҚДОРРО ИНТИХОБ КУНЕД</div>
+    <div class="preset-amounts-grid">
+      <div class="preset-amount-btn" onclick="selectPresetTopup(10, this)">10 TJS</div>
+      <div class="preset-amount-btn" onclick="selectPresetTopup(25, this)">25 TJS</div>
+      <div class="preset-amount-btn" onclick="selectPresetTopup(50, this)">50 TJS</div>
+      <div class="preset-amount-btn" onclick="selectPresetTopup(100, this)">100 TJS</div>
+      <div class="preset-amount-btn" onclick="selectPresetTopup(200, this)">200 TJS</div>
+      <div class="preset-amount-btn" onclick="selectPresetTopup(500, this)">500 TJS</div>
+    </div>
+
+    <div class="custom-amount-card">
+      <input type="number" id="custom-topup-amount" class="custom-amount-input" value="20">
+      <span style="font-size: 16px; font-weight: 800; color: var(--text-muted);">сомонӣ</span>
+    </div>
+
+    <button class="purple-solid-btn" onclick="goToTopupStep2()">
+      Идома додан ➔
+    </button>
+  </div>
+
+  <!-- ==================== TOPUP STEP 2: CHOOSE METHOD ==================== -->
+  <div id="view-topup-step2" class="app-view" style="display: none;">
+    <div class="subpage-back-row">
+      <div class="circle-back-btn" onclick="navigateToView('topup-step1')">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </div>
+      <div class="subpage-title">Пур кардани баланс</div>
+    </div>
+
+    <span class="back-link-text" onclick="navigateToView('topup-step1')">← Қафо</span>
+
+    <div class="block-title" style="margin: 16px 0 14px 4px;">2. ТАРЗИ ПАРДОХТРО ИНТИХОБ КУНЕД</div>
+
+    <div class="payment-method-tile" onclick="goToTopupStep3()">
+      <div class="method-logo-box">
+        <img src="images/dc_next.svg" alt="DC">
+      </div>
+      <div style="flex: 1;">
+        <div style="font-size: 16px; font-weight: 800;">DC.NEXT</div>
+        <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;" data-payment-card>+992980726060</div>
+      </div>
+      <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:var(--text-muted);"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+    </div>
+  </div>
+
+  <!-- ==================== TOPUP STEP 3: PAY & SEND RECEIPT ==================== -->
+  <div id="view-topup-step3" class="app-view" style="display: none;">
+    <div class="subpage-back-row">
+      <div class="circle-back-btn" onclick="navigateToView('topup-step2')">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </div>
+      <div class="subpage-title">Пур кардани баланс</div>
+    </div>
+
+    <span class="back-link-text" onclick="navigateToView('topup-step2')">← Қафо</span>
+
+    <div class="block-title" style="margin: 16px 0 14px 4px;">3. ПАРДОХТ ВА РАВОН КАРДАНИ ЧЕК</div>
+
+    <div class="section-block">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <div class="method-logo-box" style="width: 42px; height: 42px;">
+          <img src="images/dc_next.svg" alt="DC">
+        </div>
+        <div>
+          <div style="font-size: 15px; font-weight: 800;">DC.NEXT</div>
+          <div style="font-size: 12px; color: var(--text-muted);">Маблағи пардохт: <b id="step3-amount-display" style="color:#818cf8;">20 сомонӣ</b></div>
+        </div>
+      </div>
+
+      <div class="method-card-box">
+        <div>
+          <div style="font-size: 11px; color: var(--text-muted); font-weight: 700;">РАҚАМИ КОРТ / СЧЁТ</div>
+          <div class="method-card-number" id="dc-card-number-text" data-payment-card>+992980726060</div>
+        </div>
+        <div style="cursor: pointer;" onclick="copyCardNumber()">
+          <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:#818cf8;"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Receipt Box -->
+    <div class="file-upload-dropzone" id="receipt-dropzone" onclick="document.getElementById('receipt-file-input').click()">
+      <input type="file" id="receipt-file-input" accept="image/*" style="display: none;" onchange="handleReceiptFileSelected(this)">
+      <svg class="upload-icon-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+      <div style="font-size: 15px; font-weight: 800; margin-bottom: 4px;" id="dropzone-status-text">Расми чекро интихоб кунед</div>
+      <div style="font-size: 12px; color: var(--text-muted);">Танҳо форматҳои расм (.jpg, .png)</div>
+    </div>
+
+    <button id="btn-submit-receipt" class="purple-solid-btn" style="opacity: 0.5;" disabled onclick="sendDepositReceiptToServer()">
+      РАВОН КАРДАНИ ЧЕК
+    </button>
+  </div>
+
+  <!-- ==================== FLOATING BOTTOM NAVIGATION ==================== -->
+  <nav class="floating-bottom-nav">
+    <div class="nav-item-pill active" id="nav-btn-menu" onclick="navigateToView('menu')">
+      <svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+      <span>Меню</span>
+    </div>
+    <div class="nav-item-pill" id="nav-btn-history" onclick="navigateToView('history')">
+      <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+      <span>Таърих</span>
+    </div>
+    <div class="nav-item-pill" id="nav-btn-profile" onclick="navigateToView('profile')">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      <span>Профил</span>
+    </div>
+  </nav>
+
+  <!-- Purchase Confirmation Modal -->
+  <div class="action-modal-overlay" id="purchase-modal-sheet">
+    <div class="action-modal-sheet">
+      <div style="text-align: center; margin-bottom: 16px;">
+        <img id="modal-art-icon" src="images/diamond_110.svg" alt="art" style="width: 58px; height: 58px; margin-bottom: 8px;">
+        <div style="font-size: 18px; font-weight: 900;" id="modal-art-title">110 Diamonds</div>
+      </div>
+
+      <div class="modal-detail-row">
+        <span style="color: var(--text-muted);">Free Fire UID:</span>
+        <span id="modal-art-uid" style="font-weight: 800;">---</span>
+      </div>
+      <div class="modal-detail-row">
+        <span style="color: var(--text-muted);">Номи бозигар:</span>
+        <span id="modal-art-nick" style="font-weight: 800; color: #34d399;">---</span>
+      </div>
+      <div class="modal-detail-row">
+        <span style="color: var(--text-muted);">Минтақа:</span>
+        <span id="modal-art-region" style="font-weight: 800; color: #818cf8;">СНГ</span>
+      </div>
+      <div class="modal-detail-row">
+        <span style="color: var(--text-muted);">Нарх:</span>
+        <span id="modal-art-price" style="font-weight: 900; color: #818cf8;">0.0 сомонӣ</span>
+      </div>
+      <div class="modal-detail-row">
+        <span style="color: var(--text-muted);">Баланси шумо:</span>
+        <span id="modal-art-userbalance" style="font-weight: 800;">0.0 сомонӣ</span>
+      </div>
+
+      <div id="modal-insufficient-alert" style="color: #ef4444; font-size: 13px; margin: 12px 0 4px 0; text-align: center; display: none;">
+        Маблағ дар баланси шумо кифоя нест!
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="balance-btn" style="background: rgba(255,255,255,0.08);" onclick="closePurchaseModal()">Бекор кардан</button>
+        <button id="modal-btn-action" class="purple-solid-btn" style="flex: 1;" onclick="executeOrder()">
+          Тасдиқи харид ✓
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
